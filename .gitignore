@@ -1,0 +1,20 @@
+# checkpoints #
+###############
+
+.ipynb_checkpoints/
+
+# unused data#
+##############
+
+unused_data/
+
+# leftover data in temp data folder #
+#####################################
+
+tabular_data/*
+
+# Exception to file necessary to put temp data folder into project #
+####################################################################
+
+!tabular_data/.gitkeep
+
