@@ -1,23 +1,26 @@
-import sys
+# import sys
 import os
 import numpy as np
 import re
 import pandas as pd
 import panel as pn
 from IPython.display import display
-import scipy as sc
+# import scipy as sc
+# from scipy.optimize import curve_fit
 import time
-import matplotlib as plt
-import geoviews as gv
-import geoviews.feature as gf
-import xarray as xr
-from geoviews import opts
-from cartopy import crs
+# import matplotlib as plt
+# import matplotlib.pyplot as mtplot
+# from numpy import arange
+# import xarray as xr
+# from cartopy import crs
 import geopandas as gpd
-import geoviews.tile_sources as gvts
+# import geoviews as gv
+# import geoviews.feature as gf
+# from geoviews import opts
+# import geoviews.tile_sources as gvts
 from shapely import geometry
-import fiona
-gv.extension('bokeh')
+# import fiona
+# gv.extension('bokeh')
 
 # function to split files
 def fileSplit(dataFile):
@@ -165,15 +168,19 @@ def processFile(fileList, shapefile):
 # creates geopandas dataframe to cut up points and map
 def latSplit(latitude):
     globeLat = gpd.GeoDataFrame(columns = ['zone', 'geometry'])
-    for i in range(int(180/latitude)):
-        p1 = [-180, (i*latitude)-90.00000]
-        p2 = [180, (i*latitude)-90.00000]
-        p3 = [180, ((i+1)*latitude)-90.00000]
-        p4 = [-180, ((i+1)*latitude)-90.00000]
-        pointList = [p1, p2, p3, p4, p1]
-        poly = geometry.Polygon(pointList)
-        globeLat.loc[i] = [(i*latitude-90) , poly]
-        globeLat.append({'zone': (i*latitude-90) , 'geometry': poly}, ignore_index = True)
+    for j in range(2):
+        for i in range(int(180/latitude)):
+            p1 = [(j * 180)-180, (i*latitude)-90.00000]
+            p2 = [(j * 180), (i*latitude)-90.00000]
+            p3 = [(j * 180), ((i+1)*latitude)-90.00000]
+            p4 = [(j * 180)-180, ((i+1)*latitude)-90.00000]
+            pointList = [p1, p2, p3, p4, p1]
+            poly = geometry.Polygon(pointList)
+            if j == 0:
+                globeLat.loc[i] = [(str(i*latitude-90) + 'W') , poly]
+            else:
+                globeLat.loc[i + (180/latitude)] = [(str(i*latitude-90) + 'E') , poly]
+            globeLat.append({'zone': (str((i*latitude-90))) , 'geometry': poly}, ignore_index = True)
     return globeLat
         
 
