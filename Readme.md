@@ -14,10 +14,10 @@ This project is designed to measure oceanic temperature changes from the years 1
 
 Using "--file requirements.txt" on the above command to create the environment seems to cause issues with Geoviews. You can try it if you like, but if the ocean heat maps do not show up you will have to install the dependencies manually. The below lines manually install the necessary dependencies:
 
-conda install Geoviews
-conda install Seaborn
-conda install geopandas
-pip install sklearn
+conda install Geoviews  
+conda install Seaborn  
+conda install geopandas  
+pip install sklearn  
 
 5.) Activate the new environment with the command: conda activate Geoviews (or GeoviewsManual if used)
 
