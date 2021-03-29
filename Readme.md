@@ -12,18 +12,21 @@ This project is designed to measure oceanic temperature changes from the years 1
 
 4.) Create a new environment with the command: conda create --name Geoviews 
 
-Using "--file requirements.txt" on the above command to create the environment seems to cause issues with Geoviews. You can try it if you like, but if the ocean heat maps do not show up you will have to install the dependencies manually. The below lines manually install the necessary dependencies:
+Using "--file requirements.txt" on the above command to create the environment seems to cause issues with Geoviews. You can try it if you like, but if the ocean heat maps do not show up you will have to install the dependencies manually. We will manually install the dependencies in another step.
+
+5.) Activate the new environment with the command: conda activate Geoviews
+
+6.) The below lines manually install the necessary dependencies:
 
 conda install Geoviews  
 conda install Seaborn  
 conda install geopandas  
 pip install sklearn  
 
-5.) Activate the new environment with the command: conda activate Geoviews (or GeoviewsManual if used)
 
-6.) open Jupyter Notebook with command: Jupyter Notebook
+7.) open Jupyter Notebook with command: Jupyter Notebook
 
-7.) Once Notebook is opened, open the OceanTemps.ipynb file and run all cells.
+8.) Once Notebook is opened, open the OceanTemps.ipynb file and run all cells.
 
 NOTE: It may take several minutes to run
 
