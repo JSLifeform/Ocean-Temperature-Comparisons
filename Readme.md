@@ -1,4 +1,4 @@
-# Ocean Temperatures from Wrold Oceanic Database
+# Ocean Temperatures from World Oceanic Database
 
 This project is designed to measure oceanic temperature changes from the years 1987 to 2015. It is designed to run in Jupyter Notebook. Any data to be tested is in the test_data/ folder. The project was written with Python version 3.7.10 and conda version 4.9.2. The necessary dependencies are listed in the requirements.txt file. 
 
@@ -18,7 +18,7 @@ Using "--file requirements.txt" on the above command to create the environment s
 
 6.) The below lines manually install the necessary dependencies:
 
-conda install Geoviews  
+conda install -c pyviz geoviews  
 conda install Seaborn  
 conda install geopandas  
 pip install sklearn  
