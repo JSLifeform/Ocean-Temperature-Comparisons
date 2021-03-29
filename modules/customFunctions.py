@@ -1,26 +1,16 @@
-# import sys
 import os
 import numpy as np
 import re
 import pandas as pd
 import panel as pn
 from IPython.display import display
-# import scipy as sc
-# from scipy.optimize import curve_fit
 import time
-# import matplotlib as plt
-# import matplotlib.pyplot as mtplot
-# from numpy import arange
-# import xarray as xr
-# from cartopy import crs
 import geopandas as gpd
-# import geoviews as gv
-# import geoviews.feature as gf
-# from geoviews import opts
-# import geoviews.tile_sources as gvts
 from shapely import geometry
-# import fiona
-# gv.extension('bokeh')
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
 
 # function to split files
 def fileSplit(dataFile):
@@ -199,10 +189,10 @@ def processFolder(folder, shapefile = latSplit(5)):
     newData=True
     dfCount = 0
 
-    # loop through files in data/ folder
+    # loop through files in test_data/ folder
     for file in uncutFiles:
         # create and log temporary files
-        fileSplit('data/%s' %file)
+        fileSplit('test_data/%s' %file)
         cutFiles = os.listdir('tabular_data/')
         # get month and year to add as df column
         monthYear = file.split('_')
@@ -231,3 +221,42 @@ def processFolder(folder, shapefile = latSplit(5)):
     print('Done!')
     return df
             
+def linefit(x, a, b, c, d, e, f):
+    return (a * x) + (b * x**2) + (c * x**3) + (d * x**4) + (e * x**5) + f
+
+def evaluatePolynomial(x, intercept, coefficients):
+    answer = intercept
+    for i in range(len(coefficients)):
+        answer += (coefficients[i] * (x ** i))
+    return answer
+
+def bestRegression(X, y, degree):
+    rSquare = 0
+    bestDegree = 1
+    bestIntercept = 0
+    bestCoefficients = []
+    for i in range(degree):
+        poly = PolynomialFeatures(degree = (i+1))
+        X_poly = poly.fit_transform(X)
+        X_train, X_test, y_train, y_test = train_test_split(X_poly, y)
+        linreg = LinearRegression().fit(X_train, y_train)
+        if linreg.score(X_test, y_test) > rSquare:
+            rSquare = linreg.score(X_test, y_test)
+            bestIntercept = linreg.intercept_
+            bestCoefficients = linreg.coef_
+            bestDegree = (i+1)
+            continue
+    poly = PolynomialFeatures(bestDegree)
+    X_poly = poly.fit_transform(X)
+    X_train, X_test, y_train, y_test = train_test_split(X_poly, y)
+    linreg = LinearRegression().fit(X_train, y_train)
+    return [bestDegree, rSquare, bestIntercept, bestCoefficients]
+
+def addZone(df, shapesDF):
+    for i in range(len(shapesDF)):
+        shape = shapesDF.iloc[i, :]
+        for j in range(len(df)):
+            point = df.iloc[j, :]
+            if point.geometry.within(shape.geometry):
+                df.iloc[j, 3] = shape['zone']
+    return df
