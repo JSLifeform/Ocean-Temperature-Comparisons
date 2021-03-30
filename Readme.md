@@ -10,23 +10,30 @@ This project is designed to measure oceanic temperature changes from the years 1
 
 3.) Navigate to the project folder in the Anaconda prompt.
 
-4.) Create a new environment with the command: conda create --name Geoviews 
+4a.) Create a new environment with the command: conda create --name Geoviews --file requirements.txt
 
-Using "--file requirements.txt" on the above command to create the environment seems to cause issues with Geoviews. You can try it if you like, but if the ocean heat maps do not show up you will have to install the dependencies manually. We will manually install the dependencies in another step.
+5a.) Activate the new environment with the command: conda activate Geoviews
 
-5.) Activate the new environment with the command: conda activate Geoviews
 
-6.) The below lines manually install the necessary dependencies:
+Using "--file requirements.txt" on the above command to create the environment can occasionally cause issues with Geoviews. You can try it if you like, but if the ocean heat maps do not show up you may need to install the dependencies manually. This can be done by following steps 4b, 5b, and 6. You may skip step 6 if you complete the setup with 4a and 4b.
 
-conda install -c pyviz geoviews  
-conda install Seaborn  
-conda install geopandas  
+4b.) Create a new environment with the command: conda create --name GeoviewsManual
+
+5.) Activate the new environment with the command: conda activate GeoviewsManual
+
+6.) (WARNING: Skip this step if you set up the environment with steps 4a and 5a) The below lines manually install the necessary dependencies:
+
+conda install -c pyviz geoviews    
 pip install sklearn  
 
 
-7.) open Jupyter Notebook with command: Jupyter Notebook
+7.) open Jupyter Notebook with command: jupyter notebook
 
-8.) Once Notebook is opened, open the OceanTemps.ipynb file and run all cells.
+8.) Once Notebook is opened, open the OceanTemps.ipynb file.
+
+9.) Run the top cell with the import statements.
+
+10.) Once the top cell is finished running, you may run all below. There is a Run All Below Command under the Cell header in Jupyter Notebook.
 
 NOTE: It may take several minutes to run
 
