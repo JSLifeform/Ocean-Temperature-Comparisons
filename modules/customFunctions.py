@@ -27,7 +27,9 @@ def fileSplit(dataFile):
         while True:
             n += 1
             fileCount = n
-            yield open('tabular_data/%d.csv' % n, 'w')
+            filepath = os.getcwd() + '/tabular_data/{}.csv'.format(n)
+
+            yield open(filepath, 'w')
     
     #creates and opens first file
     fileSystem=files()
@@ -46,7 +48,8 @@ def fileSplit(dataFile):
     
     #close and delete last empty file
     outFile.close()
-    os.remove('tabular_data/%d.csv' % fileCount)
+    filepath = os.getcwd() + '/tabular_data/{}.csv'.format(fileCount)
+    os.remove(filepath)
 
 
 
@@ -65,18 +68,22 @@ def processSplit(fileName, shapesDF):
     #opens file and reads lines
     file = open(fileName, 'r')
     for line in file:
-        if 'Latitude' in line: 
-            latitude = line
-            lineCounter += 1
-        elif 'Longitude' in line: 
-            longitude = line
-            lineCounter += 1
-        elif 'UNITS' in line:
-            df = pd.read_csv(fileName, header = lineCounter)
-            break
-        else:
-            lineCounter += 1
-
+        try:
+            if 'Latitude' in line: 
+                latitude = line
+                lineCounter += 1
+            elif 'Longitude' in line: 
+                longitude = line
+                lineCounter += 1
+            elif 'UNITS' in line:
+                df = pd.read_csv(fileName, header = lineCounter)
+                break
+            else:
+                lineCounter += 1
+        except UnicodeDecodeError:
+            print('ERROR')
+            print(gdf)
+            return(gdf)
     # split line on commas
     latitude = latitude.split(',')
     longitude = longitude.split(',')
@@ -141,7 +148,7 @@ def processFile(fileList, shapefile):
         #ignores .gitkeep file to include folder in gitHub
         if file == '.gitkeep': continue
         #creates temporary datafram from each processed file
-        addData = processSplit('tabular_data/%s' % file, shapesDF)
+        addData = processSplit(os.getcwd() + '/tabular_data/{}'.format(file), shapesDF)
         #checks to see if anything is appended to df. If not, creates df with same dimensions as processed df's, then adds data
         if len(df) == 0:
             df = pd.DataFrame().reindex(columns = addData.columns)
@@ -150,7 +157,8 @@ def processFile(fileList, shapefile):
     # cleans processed files out of tabular_data for next data file to run
     for file in fileList:
         if file == '.gitkeep': continue
-        os.remove('tabular_data/%s' %file)
+        filepath = str(os.getcwd()) + ('/tabular_data/%s' %file)
+        os.remove(filepath)
             
             
     return df
@@ -192,8 +200,8 @@ def processFolder(folder, shapefile = latSplit(5)):
     # loop through files in test_data/ folder
     for file in uncutFiles:
         # create and log temporary files
-        fileSplit('test_data/%s' %file)
-        cutFiles = os.listdir('tabular_data/')
+        fileSplit(os.getcwd() + '/test_data/%s' %file)
+        cutFiles = os.listdir(os.getcwd() + '/tabular_data/')
         # get month and year to add as df column
         monthYear = file.split('_')
         monthYear[1] = monthYear[1][:4]
@@ -214,10 +222,12 @@ def processFolder(folder, shapefile = latSplit(5)):
         if newData:
             df = addData
             newData = False
-            print('New df from {} with {} lines'.format(file, len(addData)))
+            print('New df from {} with {} lines from {} sample points'.format(file, len(addData),\
+            len(cutFiles)-1))
         else: 
             df = df.append(addData, ignore_index = True)
-            print('Added to df from {} with {} lines'.format(file, len(addData)))
+            print('Added to df from {} with {} lines from {} sample points'.format(file,\
+            len(addData), len(cutFiles)-1))
     print('Done!')
     return df
             
